@@ -139,6 +139,7 @@ int main() {
     cout << "Testing the reverse function:" << endl;
     l.setHead(reverse(l.getHead()));
     l.print();
+    cout << "Reversing again:" << endl;
     l.reverse();
     l.print();
     return 0;
