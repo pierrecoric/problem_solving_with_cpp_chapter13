@@ -22,10 +22,11 @@ class Node {
         //simple constructor.
         Node() : data(""), link(nullptr) {};
         //Copy constructor.
-        Node(const Node& original) {data = original.data; link = original.link}; 
+        Node(const Node& original); 
         //Constructor with string parameter.
         Node(string s);
         ~Node() {};
+        Node& operator=(const Node& rhs);
         string const getData() {return data;}
         void setData(string s) {data = s;}
         Node* const getLink() {return link;}
@@ -37,6 +38,12 @@ Node::Node(string s) {
     data = s;
     link = nullptr;
 }
+
+Node::Node(const Node& original) {
+    data = original.data;
+    link = original.link;
+}
+
 
 typedef Node* nodePtr;
 
@@ -201,7 +208,7 @@ nodePtr reverse(nodePtr head) {
 }
 
 int main() {
-    Node n("caca");
+    Node n("test");
     cout << n.getData();
     Node m(n);
     cout << m.getData();
