@@ -44,6 +44,8 @@ class List {
         int size;
     public:
         List(): head(nullptr), size(0) {};
+        List(const List& original);
+        //List& operator=(const List& rhs);
         ~List() {clear();}
         void insertAtHead(string data);
         void print();
@@ -53,6 +55,38 @@ class List {
         void setHead(nodePtr ptr) {head = ptr;}
         void reverse();
 };
+
+//Copy constructor to create a deep copy of the list.
+List::List(const List& original) {
+    head = nullptr;
+    size = 0;
+
+    nodePtr current = original.head;
+    nodePtr last = nullptr;
+
+    while(current != nullptr) {
+        //Creating a new node and copying the data.
+        nodePtr newNode = new Node;
+        newNode -> data = current -> data;
+        if(head == nullptr) {
+            head = newNode;
+        }
+        else {
+            last -> link = newNode;
+        }
+        last = newNode;
+        current = current -> link;
+        size ++;
+    }
+
+}
+
+/*
+List& List::operator=(const List& rhs) {
+    List l;
+    return l;
+}
+*/
 
 void List::insertAtHead(string data) {
     nodePtr temp = new Node(data);
@@ -142,5 +176,8 @@ int main() {
     cout << "Reversing again:" << endl;
     l.reverse();
     l.print();
+    cout << "Attempting copy:" << endl;
+    List l2(l);
+    l2.print();
     return 0;
 }
