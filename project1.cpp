@@ -54,6 +54,7 @@ class List {
         nodePtr const getHead() {return head;}
         void setHead(nodePtr ptr) {head = ptr;}
         void reverse();
+        List deepCopy();
 };
 
 //Copy constructor to create a deep copy of the list.
@@ -89,7 +90,7 @@ List& List::operator=(const List& rhs) {
     }
 
     clear();
-
+    
     nodePtr current = rhs.head;
     nodePtr last = nullptr;
 
@@ -108,6 +109,28 @@ List& List::operator=(const List& rhs) {
         size ++;
     }
     return *this;
+}
+
+List List::deepCopy() {
+    List l;
+
+    nodePtr current = head;
+    nodePtr last = nullptr;
+
+    while(current != nullptr) {
+        nodePtr newNode = new Node;
+        newNode -> data = current -> data;
+        if(l.getHead() == nullptr) {
+            l.setHead(newNode);
+        }
+        else {
+            last -> link = newNode;
+        }
+        last = newNode;
+        current = current -> link;
+        l.size ++;
+    }
+    return l;
 }
 
 void List::insertAtHead(string data) {
@@ -206,5 +229,9 @@ int main() {
     l = l2;
     cout << "assigning l2 to l and printing it" << endl << endl;
     l.print();
+    cout << "Ok more tests" << endl << endl;
+    List l3;
+    l3 = l.deepCopy();
+    l3.print();
     return 0;
 }
