@@ -20,7 +20,9 @@ class Node {
         Node* link;
     public:
         //simple constructor.
-        Node() : data(""), link(nullptr) {}; 
+        Node() : data(""), link(nullptr) {};
+        //Copy constructor.
+        Node(const Node& original) {data = original.data; link = original.link}; 
         //Constructor with string parameter.
         Node(string s);
         ~Node() {};
@@ -199,6 +201,11 @@ nodePtr reverse(nodePtr head) {
 }
 
 int main() {
+    Node n("caca");
+    cout << n.getData();
+    Node m(n);
+    cout << m.getData();
+    /*
     List l;
     cout << "Testing program" << endl;
     l.insertAtHead("first");
@@ -233,5 +240,6 @@ int main() {
     List l3;
     l3 = l.deepCopy();
     l3.print();
+    */
     return 0;
 }
