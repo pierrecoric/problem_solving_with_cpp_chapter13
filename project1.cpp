@@ -45,7 +45,7 @@ class List {
     public:
         List(): head(nullptr), size(0) {};
         List(const List& original);
-        //List& operator=(const List& rhs);
+        List& operator=(const List& rhs);
         ~List() {clear();}
         void insertAtHead(string data);
         void print();
@@ -81,12 +81,34 @@ List::List(const List& original) {
 
 }
 
-/*
+//Overloading the = operator
 List& List::operator=(const List& rhs) {
-    List l;
-    return l;
+    //Check for self assignment:
+    if(this == &rhs) {
+        return *this;
+    }
+
+    clear();
+
+    nodePtr current = rhs.head;
+    nodePtr last = nullptr;
+
+    while(current != nullptr) {
+        //Creating a new node and copying the data.
+        nodePtr newNode = new Node;
+        newNode -> data = current -> data;
+        if(head == nullptr) {
+            head = newNode;
+        }
+        else {
+            last -> link = newNode;
+        }
+        last = newNode;
+        current = current -> link;
+        size ++;
+    }
+    return *this;
 }
-*/
 
 void List::insertAtHead(string data) {
     nodePtr temp = new Node(data);
@@ -179,5 +201,10 @@ int main() {
     cout << "Attempting copy:" << endl;
     List l2(l);
     l2.print();
+    cout << "New Insertion" << endl << endl;
+    l2.insertAtHead("COUCOU");
+    l = l2;
+    cout << "assigning l2 to l and printing it" << endl << endl;
+    l.print();
     return 0;
 }
