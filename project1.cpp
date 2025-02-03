@@ -24,18 +24,19 @@ template <class T>
 class Node {
     private:
         T data;
-        Node* link;
+        Node<T>* link;
     public:
         //Default constructor.
         Node();
         //Constructor with a data parameter.
         Node(T t);
+        Node(Node<T>* link);
         //Copy constructor.
         Node(const Node<T>& n);
         //Destructor.
         ~Node() {}
 
-        //Overloading <<cout>>.
+        //Overloading <<.
         template <class V>
         friend ostream& operator <<(ostream& outs, const Node<V>& n);
 
@@ -43,19 +44,33 @@ class Node {
         template <class V>
         friend ostream& operator <<(ostream& outs, const List<V>& l);
 
+        //Overloading >>
+        template <class V>
+        friend istream& operator >>(istream& ins, Node<V>& n);
+
+        //Overloadin =
+        Node<T>& operator =(const Node<T>& rhs);
+
         //Members function.
         void setData(T t) {data = t;}
         T getData() const {return data;}
+        void setLink(Node<T>* l) {link = l;}
 
         //Make list a friend of Node.
-        friend List<T>;
+        friend class List<T>;
 };
 
 //Default constructor.
 template <class T>
 Node<T>::Node() {
     link = nullptr;
-    data = NULL;
+    data = T();
+}
+
+template <class T>
+Node<T>::Node(Node<T>* link) {
+    link = link;
+    data = T();
 }
 
 //Constructor with a data parameter.
@@ -71,10 +86,30 @@ Node<T>::Node(const Node<T>& n) {
     link = n.link;
 }
 
+//Overloading <<
 template <class T>
 ostream& operator <<(ostream& outs, const Node<T>& n) {
     outs << n.data;
     return outs;
+}
+
+//Overloading >>
+template <class T>
+istream& operator >>(istream& ins, Node<T>& n) {
+    T input;
+    ins >> input;
+    n.data = input;
+    return ins;
+}
+
+//Overloading the assignment operator.
+template<class T>
+Node<T>& Node<T>::operator =(const Node<T>& rhs) {
+    if(this != &rhs) {
+        data = rhs.data;
+        link = rhs.link;
+    }
+    return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////Node
@@ -98,7 +133,7 @@ class List {
         void clear();
         int getSize() {return size;}
         void reverse();
-        friend Node<T>; 
+        friend class Node<T>; 
 };
 
 template <class T>
@@ -153,6 +188,7 @@ void List<T>::insertAtHead(T t) {
     size ++;
 }
 
+//clear function.
 template <class T>
 void List<T>::clear() {
     while(head != nullptr) {
@@ -162,10 +198,36 @@ void List<T>::clear() {
     }
 }
 
+template <class T>
+void List<T>::reverse() {
+    
+    //Declaring and initializing three pointers:
+    Node<T>* previous(nullptr), current(head), next(nullptr);
+    
+    //Iterating
+    while(current.link != nullptr) {
+        //Store the next node
+        next = current.link;
+        //invert the node pointer of the current node.
+        current.setLink(previous);
+
+        //Move the pointers
+        previous->link = current->link;
+        current->link = next->link;
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////List
+
 
 int main() {
     Node<int> i(10);
+    Node<int> test;
+    test = i;
+    cout << test << " ... " << i << "\n";
+    cin >> test;
+    cout << test << " ... " << i << "\n";
     Node<char> c('c');
     cout << i << "\n";
     cout << c << "\n";
@@ -182,5 +244,11 @@ int main() {
     lc.insertAtHead('a');
     lc.insertAtHead('c');
     cout << lc << "\n";
+    List<char> lx(lc);
+    cout << lx << "\n";
+    lx.reverse();
+    cout << lx << "\n";
+    lc.clear();
+    cout << "cleared " << lc << "\n";
     return 0;
 }
