@@ -30,7 +30,6 @@ class Node {
         Node();
         //Constructor with a data parameter.
         Node(T t);
-        Node(Node<T>* link);
         //Copy constructor.
         Node(const Node<T>& n);
         //Destructor.
@@ -64,12 +63,6 @@ class Node {
 template <class T>
 Node<T>::Node() {
     link = nullptr;
-    data = T();
-}
-
-template <class T>
-Node<T>::Node(Node<T>* link) {
-    link = link;
     data = T();
 }
 
@@ -198,24 +191,28 @@ void List<T>::clear() {
     }
 }
 
+
 template <class T>
 void List<T>::reverse() {
-    
     //Declaring and initializing three pointers:
-    Node<T>* previous(nullptr), current(head), next(nullptr);
+    Node<T>* previous = nullptr;
+    Node<T>* current = head;
+    Node<T>* next = nullptr;
     
     //Iterating
-    while(current.link != nullptr) {
+    while(current != nullptr) {
         //Store the next node
-        next = current.link;
+        next = current->link;
         //invert the node pointer of the current node.
-        current.setLink(previous);
+        current->link = previous;
 
         //Move the pointers
-        previous->link = current->link;
-        current->link = next->link;
+        previous = current;
+        current = next;
     }
+    head = previous;
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////List
