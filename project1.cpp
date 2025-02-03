@@ -13,6 +13,7 @@ using std::cout;
 using std::cin;
 using std::ostream;
 using std::istream;
+using std::initializer_list;
 
 template <class T>
 class Node;
@@ -73,10 +74,14 @@ Node<T>::Node(T t) {
     data = t;
 }
 
+//Copy Constructor
 template <class T>
 Node<T>::Node(const Node<T>& n) {
     data = n.data;
-    link = n.link;
+    if(n.link) {
+        link = new Node<T>(*n.link);
+    }
+    else link = nullptr;
 }
 
 //Overloading <<
@@ -100,11 +105,11 @@ template<class T>
 Node<T>& Node<T>::operator =(const Node<T>& rhs) {
     if(this != &rhs) {
         data = rhs.data;
-        link = rhs.link;
+        delete link;
+        link = rhs.link ? new Node<T>(*rhs.link) : nullptr;
     }
     return *this;
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////Node
 
 
@@ -115,8 +120,13 @@ class List {
         Node<T>* head;
         int size;
     public:
+        //Default constructor
         List() : head(nullptr), size(0) {}
+        //Constructor with and initializer list.
+        List(initializer_list<T> valuse);
+        //Copy constructor.
         List(const List<T>& original);
+        //Destructor.
         ~List() {clear();}
 
         template <class V>
@@ -129,10 +139,16 @@ class List {
         friend class Node<T>; 
 };
 
+//Copy constructor.
 template <class T>
 List<T>::List(const List<T>& original) {
     head = nullptr;
     size = original.size;
+
+    if(original.head == nullptr) {
+        size = 0;
+        return;
+    }
 
     Node<T>* current = original.head;
     Node<T>* last = nullptr;
@@ -147,6 +163,16 @@ List<T>::List(const List<T>& original) {
         }
         last = newNode;
         current = current -> link;
+    }
+}
+
+//Constructor with and initializer list.
+template <class T>
+List<T>::List(initializer_list<T> values) {
+    head = nullptr;
+    size = 0;
+    for (auto it = values.end() - 1; it >= values.begin(); --it) {
+        insertAtHead(*it);
     }
 }
 
@@ -191,7 +217,6 @@ void List<T>::clear() {
     }
 }
 
-
 template <class T>
 void List<T>::reverse() {
     //Declaring and initializing three pointers:
@@ -212,9 +237,6 @@ void List<T>::reverse() {
     }
     head = previous;
 }
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////List
 
 
@@ -247,5 +269,7 @@ int main() {
     cout << lx << "\n";
     lc.clear();
     cout << "cleared " << lc << "\n";
+    List<int> ll = {1, 5, 4, 10, 100, 45};
+    cout << ll << "\n";
     return 0;
 }
