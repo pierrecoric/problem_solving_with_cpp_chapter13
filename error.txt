@@ -1,0 +1,5 @@
+project1.cpp:51:9: warning: non-class friend type 'List<T>' is a C++11 extension [-Wc++11-extensions]
+        friend List<T>;
+        ^      ~~~~~~~
+project1.cpp:101:9: warning: non-class friend type 'Node<T>' is a C++11 extension [-Wc++11-extensions]
+        friend Node<T>; 
