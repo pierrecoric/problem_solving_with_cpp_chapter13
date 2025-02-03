@@ -194,6 +194,7 @@ ostream& operator <<(ostream& outs, const List<T>& l) {
     return outs;
 }
 
+//Insert at head function.
 template <class T>
 void List<T>::insertAtHead(T t) {
     Node<T>* temp = new Node<T>(t);
@@ -217,6 +218,7 @@ void List<T>::clear() {
     }
 }
 
+//Reverse function.
 template <class T>
 void List<T>::reverse() {
     //Declaring and initializing three pointers:
@@ -238,7 +240,6 @@ void List<T>::reverse() {
     head = previous;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////List
-
 
 int main() {
     Node<int> i(10);
