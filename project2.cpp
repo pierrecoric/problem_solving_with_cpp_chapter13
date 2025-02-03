@@ -11,18 +11,71 @@ the function call ends, the two pointer variable arguments should have the
 value NULL.
 */
 
+#include<iostream>
+using std::cout;
+using std::ostream;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////Node
 template <class T>
 class Node {
     private:
+        T data;
+        Node<T>* link;
     public:
+        //Default constructor.
+        Node() : data(T()), link(nullptr) {}
+        //Constructor that specifies the data.
+        Node(T t);
+        //Copy constructor.
+        Node(const Node<T>& original);
+        template <class O>
+        //Overloading <<
+        friend ostream& operator <<(ostream& outs, const Node<O>& n);
 };
 
+//Constructor that specifies the data.
+template <class T>
+Node<T>::Node(T t) {
+    link = nullptr;
+    data = t;
+}
+//Copy constructor.
+template <class T>
+Node<T>::Node(const Node<T>& original) {
+    data = original.data;
+    if(original.link) {
+        //Deep recursive copy.
+        link = new Node<T>(*original.link);    
+    } else link = nullptr;
+}
+
+//Overloading <<
+template <class T>
+ostream& operator <<(ostream& outs, const Node<T>& n) {
+    outs << n.data;
+    return outs;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////End Node
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////List
+/*
 template <class T>
 class List {
     private:
+        Node<T>* head;
+        List();
+        List(const List<T>& original) {
+
+        }
     public:
 };
+*/
+////////////////////////////////////////////////////////////////////////////////////////////////////End List
 
 int main() {
+    Node<int> i(45);
+    cout << i << "\n";
     return 0;
 }
