@@ -1,11 +1,11 @@
 /*
 1. Write a void function that takes a linked list of integers and reverses the
-order of its nodes. The function will have one call-by-reference parameter
+order of its Nodes. The function will have one call-by-reference parameter
 that is a pointer to the head of the list. After the function is called, this
-pointer will point to the head of a linked list that has the same nodes as
+pointer will point to the head of a linked list that has the same Nodes as
 the original list, but in the reverse of the order they had in the original list.
-Note that your function will neither create nor destroy any nodes. It will
-simply rearrange nodes. Place your function in a suitable test program.
+Note that your function will neither create nor destroy any Nodes. It will
+simply rearrange Nodes. Place your function in a suitable test program.
 */
 
 #include <iostream>
@@ -39,7 +39,7 @@ class Node {
         template <class V>
         friend ostream& operator <<(ostream& outs, const Node<V>& n);
 
-        //Making the overloading of << a friend of node as well so it can access the data.
+        //Making the overloading of << a friend of Node as well so it can access the data.
         template <class V>
         friend ostream& operator <<(ostream& outs, const List<V>& l);
 
@@ -142,7 +142,7 @@ ostream& operator <<(ostream& outs, const List<T>& l) {
 
 template <class T>
 void List<T>::insertAtHead(T t) {
-    Node<T>* temp = new Node(t);
+    Node<T>* temp = new Node<T>(t);
     if(size == 0) {
         head = temp;
     }
