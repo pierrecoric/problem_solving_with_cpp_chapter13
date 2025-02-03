@@ -12,8 +12,17 @@ value NULL.
 */
 
 #include<iostream>
+#include<initializer_list>
 using std::cout;
 using std::ostream;
+using std::initializer_list;
+
+
+template <class T>
+class Node;
+
+template <class T>
+class List;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////Node
 template <class T>
@@ -28,9 +37,16 @@ class Node {
         Node(T t);
         //Copy constructor.
         Node(const Node<T>& original);
-        template <class O>
+
         //Overloading <<
+        template <class O>
         friend ostream& operator <<(ostream& outs, const Node<O>& n);
+
+        //Making the overloading of << for List a friend of Node.
+        template <class O>
+        friend ostream& operator <<(ostream& outs, const List<O>& l);
+
+        friend class List<T>;
 };
 
 //Constructor that specifies the data.
@@ -60,22 +76,71 @@ ostream& operator <<(ostream& outs, const Node<T>& n) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////List
-/*
 template <class T>
 class List {
     private:
         Node<T>* head;
-        List();
-        List(const List<T>& original) {
-
-        }
+        int size;
     public:
+        List() : head(nullptr), size(0) {}
+        //Constructor with an initializer list.
+        List(initializer_list<T> values);
+        List(const List<T>& original);
+        
+        template <class O>
+        friend ostream& operator <<(ostream& outs, const List<O>& l);
+
+        void insertAtHead(T t);
+
+        friend class Node<T>;
 };
-*/
+
+template <class T>
+List<T>::List(initializer_list<T> values) {
+    head = nullptr;
+    size = 0;
+    for(auto it = values.end() -1; it >= values.begin(); it--) {
+        insertAtHead(*it);
+    }
+}
+
+//Insert at head function.
+template <class T>
+void List<T>::insertAtHead(T t) {
+    Node<T>* newNode = new Node<T>(t);
+    if(head == nullptr) {
+        head = newNode;
+    }
+    else {
+        newNode -> link = head;
+        head = newNode;
+    }
+    size ++;
+}
+
+//Overloading <<.
+template <class T>
+ostream& operator <<(ostream& outs, const List<T>& l) {
+    Node<T>* current = l.head;
+    int count = 0;
+    outs << "[";
+    while(current != nullptr) {
+        outs << current -> data;
+        if (count < l.size - 1) {
+            outs << ", ";
+        }
+        count ++;
+        current = current -> link;
+    }
+    outs << "]";
+    return outs;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////End List
 
 int main() {
     Node<int> i(45);
     cout << i << "\n";
+    List<int> l = {1,2,3,4};
+    cout << l << "\n";
     return 0;
 }

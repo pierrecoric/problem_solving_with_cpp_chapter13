@@ -9,6 +9,7 @@ simply rearrange Nodes. Place your function in a suitable test program.
 */
 
 #include <iostream>
+#include<initializer_list>
 using std::cout;
 using std::cin;
 using std::ostream;
@@ -123,7 +124,7 @@ class List {
         //Default constructor
         List() : head(nullptr), size(0) {}
         //Constructor with and initializer list.
-        List(initializer_list<T> valuse);
+        List(initializer_list<T> values);
         //Copy constructor.
         List(const List<T>& original);
         //Destructor.
