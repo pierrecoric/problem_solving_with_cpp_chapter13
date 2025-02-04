@@ -314,7 +314,9 @@ List mergeSort(const List& list) {
     else {
         int mid = left + (right - left) / 2;
         List leftList = mergeSort(splash(sorted, left, mid));
+        //cout << splash(sorted, left, mid) << "\n";
         List rightList = mergeSort(splash(sorted, mid, right));
+        //cout << splash(sorted, left, mid) << "\n";
         sorted = merge(leftList, rightList);
     }
     return sorted;
