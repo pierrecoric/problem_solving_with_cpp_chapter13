@@ -256,25 +256,11 @@ List& List::operator =(const List& rhs) {
     //Check for self assignment.
     if(this != &rhs) {
         this -> clear();
-        if(rhs.head == nullptr) {
-            this -> head = nullptr;
-            this -> tail = nullptr;
-            this -> size = 0; 
-        }
-        else {
-            Node* current = rhs.head;
+        if(rhs.head != nullptr) {
+            Node*current = rhs.head;
             while(current != nullptr) {
-                Node* newNode;
-                newNode -> data = current -> data;
-                if(current == rhs.head) {
-                    this -> head = newNode;
-                    this -> tail = newNode;
-                }
-                else {
-                    this -> insertAtTail(current -> data);
-                }
+                this -> insertAtHead(current -> data);
                 current = current -> link;
-                this -> size ++;
             }
         }
     }
