@@ -173,20 +173,25 @@ template<class T>
 List<T>& List<T>::operator =(const List<T>& rhs) {
     if(this != &rhs) {
 
-        head = rhs.head;
-        size = rhs.size;
-        Node<T>* current = rhs.head;
-        Node<T>* last = nullptr;
+        clear();
 
-        while(current != nullptr) {
-            Node<T> newNode = new Node<T>(current -> data);
-            if(head == nullptr) {
-                head = newNode;
+        size = rhs.size;
+
+        if(rhs.head != nullptr) {
+            head = new Node<T>(rhs.head->data);
+            Node<T>* current = head;
+            Node<T>* currentRhs = rhs.head->link;
+            
+            while(currentRhs != nullptr) {
+                current -> link = new Node<T>(currentRhs -> data);
+                current = current -> link;
+                currentRhs = currentRhs -> link;
             }
-            else last -> link = newNode;
-            last = newNode;
-            current = current -> link;
         }
+        else {
+            head = nullptr;
+        }
+    
     }
     return *this;
 }
