@@ -105,6 +105,9 @@ class List {
 
         List<T>& operator =(const List<T>& rhs);
 
+        void reverse();
+
+
         friend class Node<T>;
 };
 
@@ -208,40 +211,60 @@ List<T> merge(List<T>& listA, List<T>& listB) {
     //If we are here both list contain some stuff.
     Node<T>* currentA(listA.head);
     Node<T>* currentB(listB.head);
-    T a, b;
 
     while(currentA != nullptr && currentB != nullptr) {
-        if(currentA != nullptr) {
-            a = currentA -> data;
-            cout << "A" << a << "\n";
-        }
-        if(currentB != nullptr) {
-            b = currentB -> data;
-            cout << "B" << b << "\n";
-        }
-        
-        bool insertA = (a < b) ? true : false;
-
-        //Move the pointer of the element that has been inserted.
-        if(insertA) {
-            result.insertAtHead(a);
+        if(currentA -> data < currentB -> data) {
+            result.insertAtHead(currentA -> data);
             currentA = currentA -> link;
         }
         else {
-            result.insertAtHead(b);
+            result.insertAtHead(currentB -> data);
             currentB = currentB -> link;
-        }        
+        }
     }
-    cout << "   " << result << "   ";
+
+    //Copy the remaining elements.
+
+    while(currentA != nullptr) {
+        result.insertAtHead(currentA -> data);
+        currentA = currentA -> link;
+    }
+    while(currentB != nullptr) {
+        result.insertAtHead(currentB -> data);
+        currentB = currentB -> link;
+    }
+    result.reverse();
     return result;
+}
+
+//Reverse function.
+template <class T>
+void List<T>::reverse() {
+    //Declaring and initializing three pointers:
+    Node<T>* previous = nullptr;
+    Node<T>* current = head;
+    Node<T>* next = nullptr;
+    
+    //Iterating
+    while(current != nullptr) {
+        //Store the next node
+        next = current->link;
+        //invert the node pointer of the current node.
+        current->link = previous;
+
+        //Move the pointers
+        previous = current;
+        current = next;
+    }
+    head = previous;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////End List
 
 
 
 int main() {
-    List<int> l1 = {1,3,5,6,8,8,12,15,17};
-    List<int> l2 = {1,2,4,7,10,11,13,14,100};
+    List<int> l1 = {1,3,5,6,8,8,12,15,17, 1000, 1001};
+    List<int> l2 = {1,2,4,7,10,11,13,14,100, 233, 490};
     cout << "l1: " << l1 << "\n";
     cout << "l2: " << l2 << "\n";
     List<int> cool = merge(l1, l2);
