@@ -43,7 +43,7 @@ class List {
         //Insert at Tail.
         void insertAtTail(int i);
         //Insert at Node.
-        void insertAtNode(int i);
+        void insertAfterNode(int n, int i);
         //Insert after Target.
         void insertAfterTarget(int i);
         //Clear the list.
@@ -52,13 +52,12 @@ class List {
         bool empty() {return size == 0;}
         //Get Size.
         int getSize() {return size;}
-        Node* copyList(Node* original);
         //Overloading the assignment operator.
         List& operator =(const List& rhs);
         //Merge function
         friend List merge(const List& listA, const List& listB);
         friend List mergeSort(const List& listA);
-        friend ostream& operator <<(ostream& outs, List list);
+        friend ostream& operator <<(ostream& outs, const List& list);
 };
 
 //Clear function.
@@ -74,38 +73,63 @@ void List::clear() {
     }
 }
 
-//Helper function to copy a list.
-Node* List::copyList(Node* original) {
-    if(original == nullptr) {
-        return nullptr;
+//Insert at Head.
+void List::insertAtHead(int i) {
+    Node* newNode = new Node;
+    newNode -> data = i;
+    if(head == nullptr) {
+        head = newNode;
+        tail = newNode;
     }
-    Node* newHead = new Node;
-    Node* newTail = new Node;
-    newHead -> data = original -> data; 
-    Node* current = newHead;
-    original = original -> link;
-    
-    while(original != nullptr) {
-        current -> link = new Node;
-        current -> link -> data = original -> data;
-        current  = current -> link;
-        original = original -> link;
+    else {
+        newNode -> link = head;
+        head = newNode;
     }
-    return newHead;
+    size ++;
+}
+//Insert at Tail.
+void List::insertAtTail(int i) {
+    Node* newNode = new Node;
+    newNode -> data = i;
+    if(tail == nullptr) {
+        head = newNode;
+        tail = newNode;
+    }
+    else {
+        tail -> link = newNode;
+        tail = newNode;
+    }
+    size ++;
 }
 
-//Overloading the = operator using the copy list function.
-List& List::operator =(const List& rhs) {
-    if(this != &rhs) {
-        clear();
-        head = copyList(rhs.head);
-    }
-    return *this;
+void List::insertAfterNode(int n, int i) {
+    Node* newNode = new Node;
+    newNode -> data = i;
 }
 
+//Overloading of <<.
+ostream& operator <<(ostream& outs, const List& list) {
+    Node* temp = list.head;
+    int count(0);
+    while(temp != nullptr) {
+        outs << temp -> data;
+        if(count < list.size - 1) {
+            outs << ", ";
+        }
+        count ++;
+        temp = temp -> link;
+    }
+    return outs;
+}
 
 int main() {
     List l1;
+    l1.insertAtHead(0);
+    l1.insertAtTail(1);
+    l1.insertAtTail(2);
+    l1.insertAtTail(3);
+    l1.insertAtHead(-1);
     cout << "Test:\n\n";
+    cout << l1 << "\n";
     return 0;
 }
