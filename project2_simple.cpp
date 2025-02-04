@@ -60,7 +60,8 @@ class List {
         List& operator =(const List& rhs);
         //Merge function
         friend List merge(const List& listA, const List& listB);
-        friend List mergeSort(const List& listA);
+        friend List mergeSort(const List& list);
+        friend List splash(const List& list, int begin, int end);
         friend ostream& operator <<(ostream& outs, const List& list);
 };
 
@@ -180,8 +181,8 @@ int List::removeFromHead() {
         head = head -> link;
         int result = temp -> data;
         delete temp;
-        return result;
         size --;
+        return result;
     }
     else return 0;
 }
@@ -241,7 +242,6 @@ bool List::removeFirstTarget(int target) {
             }
         }
         if(found) {
-            cout << "yass";
             previous -> link = current -> link;
             delete current;
             size --;
@@ -259,7 +259,7 @@ List& List::operator =(const List& rhs) {
         if(rhs.head != nullptr) {
             Node*current = rhs.head;
             while(current != nullptr) {
-                this -> insertAtHead(current -> data);
+                this -> insertAtTail(current -> data);
                 current = current -> link;
             }
         }
@@ -289,18 +289,40 @@ List merge(const List& listA, const List& listB) {
     List A(listA), B(listB);
     List result;
     while(A.head != nullptr && B.head != nullptr) {
-        if(listA.tail -> data < listB.tail -> data) {
-            result.insertAtTail(A.removeFromTail());
-        } else result.insertAtTail(B.removeFromTail());
+        if(A.head -> data < B.head -> data) {
+            result.insertAtTail(A.removeFromHead());
+        } else result.insertAtTail(B.removeFromHead());
     }
+    
     while(A.head != nullptr) {
-        result.insertAtHead(A.removeFromTail());
+        result.insertAtTail(A.removeFromHead());
     }
     while(B.head != nullptr) {
-        result.insertAtHead(B.removeFromTail());
+        result.insertAtTail(B.removeFromHead());
+    }
+    
+    return result;
+}
+
+List mergeSort(const List& list) {
+    List sorted(list);
+    if(sorted.getSize() == 1) {
+        return sorted;
+    }
+    return sorted;
+}
+
+List splash(const List& list, int begin, int end) {
+    List result(list);
+    for(int i = 0; i < begin; i ++) {
+        result.removeFromHead();
+    }
+    for(int i = list.size; i > end; i --) {
+        result.removeFromTail();
     }
     return result;
 }
+
 
 
 //Testing.
@@ -358,6 +380,55 @@ int main() {
     l1.clear();
     l1.insertAtHead(1);
     l2 = l1;
-    cout << l2 << "\n";
+    l2.insertAtHead(0);
+    l2.insertAtHead(-2);
+    l1 = l2;
+    cout << l1 << "\n";
+    cout << "testing the copy constructor \n";
+    List l3(l1);
+    cout << l1 << "\n";
+    //Reseting everything for some new tests.
+    l1.clear();
+    l2.clear();
+    l3.clear();
+    cout << l1 << l2 << l3 << "\n";
+
+    l1.insertAtTail(1);
+    l1.insertAtTail(3);
+    l1.insertAtTail(7);
+    l1.insertAtTail(12);
+
+    l2.insertAtTail(1);
+    l2.insertAtTail(2);
+    l2.insertAtTail(6);
+    l2.insertAtTail(19);
+    l2.insertAtTail(20);
+    l2.insertAtTail(100);
+    l2.insertAtTail(101);
+
+    cout << l1 << "\n" << l2 << "\n";
+
+    l3 = merge(l1, l2);
+
+    cout << l3 << "\n";
+
+    l3.clear();
+
+    cout << "easy population on l3 \n";
+
+    for(int i = 0; i < 11; i++) {
+        l3.insertAtTail(i);
+    }
+
+    cout << l3 << "\n";
+
+    List l4 = splash(l3, 0, l3.getSize() / 2);
+    List l5 = splash(l3, l3.getSize() / 2, l3.getSize());
+    cout << "Testing the splash function: \n";
+    cout << l4 << "\n";
+    cout << l5.getSize() << "\n";
+    cout << l5 << "\n";
+
+    cout << "\n All good 🔄 \n";
     return 0;
 }
