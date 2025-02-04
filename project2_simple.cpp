@@ -45,13 +45,17 @@ class List {
         //Insert at Node.
         void insertAfterNode(int n, int i);
         //Insert after Target.
-        void insertAfterTarget(int i);
+        void insertAfterTarget(int target, int i);
+        int removeFromHead();
+        int removeFromTail();
+        bool removeFirstTarget(int target);
         //Clear the list.
         void clear();
         //Empty.
         bool empty() {return size == 0;}
         //Get Size.
         int getSize() {return size;}
+        int getTail();
         //Overloading the assignment operator.
         List& operator =(const List& rhs);
         //Merge function
@@ -70,6 +74,9 @@ void List::clear() {
         head = head -> link;
         //Delete the temporary node.
         delete temp;
+        head = nullptr;
+        tail = nullptr;
+        size = 0;
     }
 }
 
@@ -103,8 +110,143 @@ void List::insertAtTail(int i) {
 }
 
 void List::insertAfterNode(int n, int i) {
-    Node* newNode = new Node;
-    newNode -> data = i;
+    
+    Node* current = head;
+
+    if(n >= size) {
+        insertAtTail(i);
+    }
+    else if (n == 0) {
+        insertAtHead(i);
+    }
+    else {
+        for(int j = 0; j < n - 1; j++) {
+            current = current -> link;
+        }
+        Node* newNode = new Node;
+        newNode -> data = i;
+        newNode -> link = current -> link;
+        current -> link = newNode;
+        size ++;
+    }
+}
+
+//Insert after a specific target if the target is found.
+void List::insertAfterTarget(int target, int i) {
+    
+    bool found(false);
+
+    Node* current = head;
+    while(current != nullptr) {
+        if(current -> data == target) {
+            found = true;
+            break;
+        }
+        current = current -> link;
+    }
+    if(found) {
+        Node* newNode = new Node;
+        newNode -> data = i;
+        newNode -> link = current -> link;
+        //Make sure that if the target is the last element the tail is updated.
+        if(tail == current) {
+            tail = newNode;
+        }
+        current -> link = newNode;
+        size ++;
+    }
+}
+
+//Returns the tail if it points to something
+int List::getTail() {
+    if(tail) {
+        return tail->data;
+    }
+    else return 0;
+}
+
+int List::removeFromHead() {
+    if(size == 1) {
+        int result = head -> data;
+        head = nullptr;
+        tail = nullptr;
+        size = 0;
+        return result;
+    }
+    else if(head != nullptr) {
+        Node* temp = new Node;
+        temp = head;
+        head = head -> link;
+        int result = temp -> data;
+        delete temp;
+        return result;
+        size --;
+    }
+    else return 0;
+}
+
+//Remove from the tail.
+int List::removeFromTail() {
+    //if there is only one element.
+    if(size == 1) {
+        return removeFromHead();
+    }
+    else if(head) {
+        Node* temp = new Node;
+        temp = head;
+        while(temp -> link -> link != nullptr) {
+            temp = temp -> link;
+        }
+        int result = temp -> link -> data;
+        delete temp -> link;
+        temp -> link = nullptr;
+        tail = temp;
+        size --;
+        return result;
+    }
+    else if(head -> link == nullptr) {
+        return head -> data;
+        delete head;
+        head = nullptr;
+        tail = nullptr;
+        size = 0;
+    }
+    else {
+        return 0;  
+    }
+}
+
+bool List::removeFirstTarget(int target) {
+    bool found = false;
+
+    Node* previous;
+    Node* current = head;
+
+    if(current == nullptr) {
+        return false;
+    }
+    else if(current -> data == target) {
+        removeFromHead();
+        return true;
+    }
+    else {
+        while(current != nullptr) {
+            previous = current;
+            current = current -> link;
+            if (current -> data == target) {
+                found = true;
+                break;
+            }
+        }
+        if(found) {
+            cout << "yass";
+            previous -> link = current -> link;
+            delete current;
+            size --;
+        }
+        return found;
+    }
+
 }
 
 //Overloading of <<.
@@ -114,7 +256,7 @@ ostream& operator <<(ostream& outs, const List& list) {
     while(temp != nullptr) {
         outs << temp -> data;
         if(count < list.size - 1) {
-            outs << ", ";
+            outs << " -> ";
         }
         count ++;
         temp = temp -> link;
@@ -123,13 +265,54 @@ ostream& operator <<(ostream& outs, const List& list) {
 }
 
 int main() {
-    List l1;
-    l1.insertAtHead(0);
-    l1.insertAtTail(1);
-    l1.insertAtTail(2);
-    l1.insertAtTail(3);
-    l1.insertAtHead(-1);
     cout << "Test:\n\n";
+    List l1;
+    cout << l1.getSize() << "\n";
+    cout << "insertions:\n";
+    l1.insertAtHead(0);
     cout << l1 << "\n";
+    l1.insertAtTail(1);
+    cout << l1 << "\n";
+    l1.insertAtTail(2);
+    cout << l1 << "\n";
+    l1.insertAtTail(3);
+    cout << l1 << "\n";
+    l1.insertAtHead(-1);
+    cout << l1 << "\n";
+    l1.insertAfterTarget(1, 5);
+    cout << l1 << "\n";
+    l1.insertAfterNode(1, 10);
+    cout << l1 << "\n";
+    l1.insertAfterTarget(3, 42);
+    cout << l1 << "\n";
+    l1.insertAfterTarget(3, 45);
+    cout << l1 << "\n";
+    l1.insertAfterTarget(42, 99);
+    cout << l1 << "\n";
+    l1.removeFromTail();
+    cout << l1 << "\n";
+    l1.clear();
+    l1.insertAtHead(10);
+    l1.insertAtHead(9);
+    cout << l1 << "\n";
+    l1.removeFromTail();
+    cout << "here size is " << l1.getSize() << "\n";
+    l1.removeFromTail();
+    cout << l1 << "\n";
+    l1.insertAtHead(0);
+    cout << l1 << "\n";
+    l1.insertAtTail(1);
+    cout << l1 << "\n";
+    l1.insertAtTail(2);
+    cout << l1 << "\n";
+    l1.insertAtTail(3);
+    cout << l1 << "\n";
+    l1.insertAtHead(-1);
+    cout << l1 << "\n";
+    l1.insertAfterTarget(1, 5);
+    cout << l1 << "\n";
+    l1.removeFirstTarget(2);
+    cout << l1 << "\n";
+
     return 0;
 }
