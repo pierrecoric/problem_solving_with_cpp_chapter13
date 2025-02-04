@@ -45,6 +45,7 @@ class List {
         void insertAtTail(int i);
         int removeFromHead();
         int removeFromTail();
+        void reverse();
         void clear();
         bool empty() {return size == 0;}
         int getSize() {return size;}
@@ -120,6 +121,23 @@ int List::removeFromTail() {
         size --;
         return result;
     } else return 0;
+}
+
+//Reverse function.
+void List::reverse() {
+    if(head) {
+        Node* current = head;
+        Node* previous(nullptr);
+        Node* next(nullptr);
+        tail = current;
+        while(current) {
+            next = current -> link;
+            current -> link = previous;
+            previous = current;
+            current = next;
+        }
+        head = previous;
+    }
 }
 
 //Function to clear the whole list
@@ -203,6 +221,8 @@ int main() {
     cout << l1 << "\n"; 
     cout << l2 << "\n";
     List l3 = merge (l1, l2);
+    cout << l3 << "\n";
+    l3.reverse();
     cout << l3 << "\n";
     return 0;
 }
