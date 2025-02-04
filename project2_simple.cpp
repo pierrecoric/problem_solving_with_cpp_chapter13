@@ -165,6 +165,7 @@ int List::getTail() {
     else return 0;
 }
 
+//Remove from head.
 int List::removeFromHead() {
     if(size == 1) {
         int result = head -> data;
@@ -216,6 +217,7 @@ int List::removeFromTail() {
     }
 }
 
+//Remove the first occurence of a given element and return true if it has been found.
 bool List::removeFirstTarget(int target) {
     bool found = false;
 
@@ -249,10 +251,42 @@ bool List::removeFirstTarget(int target) {
 
 }
 
+//Overloading the assignment operator
+List& List::operator =(const List& rhs) {
+    //Check for self assignment.
+    if(this != &rhs) {
+        this -> clear();
+        if(rhs.head == nullptr) {
+            this -> head = nullptr;
+            this -> tail = nullptr;
+            this -> size = 0; 
+        }
+        else {
+            Node* current = rhs.head;
+            while(current != nullptr) {
+                Node* newNode;
+                newNode -> data = current -> data;
+                if(current == rhs.head) {
+                    this -> head = newNode;
+                    this -> tail = newNode;
+                }
+                else {
+                    this -> insertAtTail(current -> data);
+                }
+                current = current -> link;
+                this -> size ++;
+            }
+        }
+    }
+    return *this;
+}
+
+
 //Overloading of <<.
 ostream& operator <<(ostream& outs, const List& list) {
     Node* temp = list.head;
     int count(0);
+    outs << "[";
     while(temp != nullptr) {
         outs << temp -> data;
         if(count < list.size - 1) {
@@ -261,9 +295,29 @@ ostream& operator <<(ostream& outs, const List& list) {
         count ++;
         temp = temp -> link;
     }
+    outs << "]";
     return outs;
 }
 
+List merge(const List& listA, const List& listB) {
+    List A(listA), B(listB);
+    List result;
+    while(A.head != nullptr && B.head != nullptr) {
+        if(listA.tail -> data < listB.tail -> data) {
+            result.insertAtTail(A.removeFromTail());
+        } else result.insertAtTail(B.removeFromTail());
+    }
+    while(A.head != nullptr) {
+        result.insertAtHead(A.removeFromTail());
+    }
+    while(B.head != nullptr) {
+        result.insertAtHead(B.removeFromTail());
+    }
+    return result;
+}
+
+
+//Testing.
 int main() {
     cout << "Test:\n\n";
     List l1;
@@ -313,6 +367,11 @@ int main() {
     cout << l1 << "\n";
     l1.removeFirstTarget(2);
     cout << l1 << "\n";
-
+    cout << "testing assignment operator \n";
+    List l2;
+    l1.clear();
+    l1.insertAtHead(1);
+    l2 = l1;
+    cout << l2 << "\n";
     return 0;
 }
