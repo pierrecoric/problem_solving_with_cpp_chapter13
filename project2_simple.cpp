@@ -306,13 +306,22 @@ List merge(const List& listA, const List& listB) {
 
 List mergeSort(const List& list) {
     List sorted(list);
-    if(sorted.getSize() == 1) {
+    int left(0), right(list.size);
+
+    if(sorted.size == 1) {
         return sorted;
+    }
+    else {
+        int mid = left + (right - left) / 2;
+        List leftList = mergeSort(splash(sorted, left, mid));
+        List rightList = mergeSort(splash(sorted, mid, right));
+        sorted = merge(leftList, rightList);
     }
     return sorted;
 }
 
 List splash(const List& list, int begin, int end) {
+    //cout << "recursion 🔄 \n";
     List result(list);
     for(int i = 0; i < begin; i ++) {
         result.removeFromHead();
@@ -322,8 +331,6 @@ List splash(const List& list, int begin, int end) {
     }
     return result;
 }
-
-
 
 //Testing.
 int main() {
@@ -426,8 +433,48 @@ int main() {
     List l5 = splash(l3, l3.getSize() / 2, l3.getSize());
     cout << "Testing the splash function: \n";
     cout << l4 << "\n";
-    cout << l5.getSize() << "\n";
     cout << l5 << "\n";
+
+    l3.clear();
+    l3.insertAtHead(12);
+    l3.insertAtHead(13);
+    l3.insertAtHead(11);
+    l3.insertAtHead(15);
+    l3.insertAtHead(23);
+    l3.insertAtHead(-1);
+    l3.insertAtHead(2);
+    l3.insertAtHead(34);
+    l3.insertAtHead(27);
+    l3.insertAtHead(0);
+    l3.insertAtHead(16);
+    l3.insertAtHead(-100);
+    l3.insertAtHead(0);
+    l3.insertAtHead(135);
+    l3.insertAtHead(111);
+    l3.insertAtHead(1);
+    l3.insertAtHead(-12);
+    l3.insertAtHead(-41);
+    l3.insertAtHead(-90);
+    l3.insertAtHead(90);
+    l3.insertAtHead(112);
+    l3.insertAtHead(143);
+    l3.insertAtTail(13);
+    l3.insertAtTail(13);
+    l3.insertAtTail(11);
+    l3.insertAtTail(2);
+    l3.insertAfterTarget(90, 89);
+    l3.insertAfterNode(1, 1111);
+    l3.insertAtTail(3);
+    l3.insertAtTail(3);
+
+    l3 = merge (l1, l3);
+
+    cout << l3 << "\n";
+
+    l3 = mergeSort(l3);
+
+
+    cout << l3 << "\n";
 
     cout << "\n All good 🔄 \n";
     return 0;
