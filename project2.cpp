@@ -17,7 +17,6 @@ using std::cout;
 using std::ostream;
 using std::initializer_list;
 
-
 template <class T>
 class Node;
 
@@ -41,15 +40,12 @@ class Node {
         //Overloading <<
         template <class O>
         friend ostream& operator <<(ostream& outs, const Node<O>& n);
-
         //Making the overloading of << for List a friend of Node.
         template <class O>
         friend ostream& operator <<(ostream& outs, const List<O>& l);
-
+        //Making the merge list a friend of Node.
         template <class O>
         friend List<O> merge(List<O>& listA, List<O>& listB);
-
-
 
         friend class List<T>;
 };
@@ -60,6 +56,7 @@ Node<T>::Node(T t) {
     link = nullptr;
     data = t;
 }
+
 //Copy constructor.
 template <class T>
 Node<T>::Node(const Node<T>& original) {
@@ -91,22 +88,25 @@ class List {
         List(initializer_list<T> values);
         List(const List<T>& original);
         
+        //Overloading <<
         template <class O>
         friend ostream& operator <<(ostream& outs, const List<O>& l);
 
-        void insertAtHead(T t);
 
+        //Merge function
         template <class O>
         friend List<O> merge(List<O>& listA, List<O>& listB);
 
         int getSize() const {return size;}
-        void clear();
         int empty() const {return size == 0;}
+        void insertAtHead(T t);
 
+        void clear();
+        //overloading the = operator
         List<T>& operator =(const List<T>& rhs);
 
+        //Reverse function
         void reverse();
-
 
         friend class Node<T>;
 };
