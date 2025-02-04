@@ -49,6 +49,8 @@ class Node {
         template <class O>
         friend List<O> merge(List<O>& listA, List<O>& listB);
 
+
+
         friend class List<T>;
 };
 
@@ -97,8 +99,11 @@ class List {
         template <class O>
         friend List<O> merge(List<O>& listA, List<O>& listB);
 
-        int size() const {return size;}
+        int getSize() const {return size;}
+        void clear();
         int empty() const {return size == 0;}
+
+        List<T>& operator =(const List<T>& rhs);
 
         friend class Node<T>;
 };
@@ -110,6 +115,44 @@ List<T>::List(initializer_list<T> values) {
     for(auto it = values.end() -1; it >= values.begin(); it--) {
         insertAtHead(*it);
     }
+}
+
+//clear function.
+template <class T>
+void List<T>::clear() {
+    while(head != nullptr) {
+        Node<T>* temp = head;
+        head = head -> link;
+        delete temp;
+    }
+}
+
+//Overloading the assignment operator for List
+template<class T>
+List<T>& List<T>::operator =(const List<T>& rhs) {
+    if(this != &rhs) {
+
+        clear();
+
+        size = rhs.size;
+
+        if(rhs.head != nullptr) {
+            head = new Node<T>(rhs.head->data);
+            Node<T>* current = head;
+            Node<T>* currentRhs = rhs.head->link;
+            
+            while(currentRhs != nullptr) {
+                current -> link = new Node<T>(currentRhs -> data);
+                current = current -> link;
+                currentRhs = currentRhs -> link;
+            }
+        }
+        else {
+            head = nullptr;
+        }
+    
+    }
+    return *this;
 }
 
 //Insert at head function.
@@ -147,14 +190,12 @@ ostream& operator <<(ostream& outs, const List<T>& l) {
 template<class T>
 List<T> merge(List<T>& listA, List<T>& listB) {
     List<T> result;
-    Node<T>* currentA(listA.head);
-    Node<T>* currentB(listB.head);
-    T a, b;
 
     //If both lists are empty
     if(listA.empty() && listB.empty()) {
         return result;
     }
+    //If one or the other is empty.
     else if(listA.empty()) {
         result = listB;
         return result;
@@ -164,19 +205,32 @@ List<T> merge(List<T>& listA, List<T>& listB) {
         return result;
     }
 
+    //If we are here both list contain some stuff.
+    Node<T>* currentA(listA.head);
+    Node<T>* currentB(listB.head);
+    T a, b;
+
     while(currentA != nullptr && currentB != nullptr) {
         if(currentA != nullptr) {
             a = currentA -> data;
-            //Move the pointer only if the element has been inserted.
-            currentA = currentA -> link;
+            cout << "A" << a << "\n";
         }
         if(currentB != nullptr) {
             b = currentB -> data;
-            //Move the pointer only if the element has been inserted.
-            currentB = currentB -> link;
+            cout << "B" << b << "\n";
         }
-        T insert = (a > b) ? a : b;
-        result.insertAtHead(insert);
+        
+        bool insertA = (a < b) ? true : false;
+
+        //Move the pointer of the element that has been inserted.
+        if(insertA) {
+            result.insertAtHead(a);
+            currentA = currentA -> link;
+        }
+        else {
+            result.insertAtHead(b);
+            currentB = currentB -> link;
+        }        
     }
     cout << "   " << result << "   ";
     return result;

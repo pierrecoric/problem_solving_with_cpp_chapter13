@@ -169,6 +169,7 @@ List<T>::List(const List<T>& original) {
     }
 }
 
+//Overloading the assignment operator for List
 template<class T>
 List<T>& List<T>::operator =(const List<T>& rhs) {
     if(this != &rhs) {
