@@ -133,6 +133,8 @@ class List {
         template <class V>
         friend ostream& operator <<(ostream& outs, const List<V>& l);
 
+        List<T>& operator =(const List<T>& rhs);
+
         void insertAtHead(T t);
         void clear();
         int getSize() {return size;}
@@ -165,6 +167,28 @@ List<T>::List(const List<T>& original) {
         last = newNode;
         current = current -> link;
     }
+}
+
+template<class T>
+List<T>& List<T>::operator =(const List<T>& rhs) {
+    if(this != &rhs) {
+
+        head = rhs.head;
+        size = rhs.size;
+        Node<T>* current = rhs.head;
+        Node<T>* last = nullptr;
+
+        while(current != nullptr) {
+            Node<T> newNode = new Node<T>(current -> data);
+            if(head == nullptr) {
+                head = newNode;
+            }
+            else last -> link = newNode;
+            last = newNode;
+            current = current -> link;
+        }
+    }
+    return *this;
 }
 
 //Constructor with and initializer list.
@@ -273,5 +297,7 @@ int main() {
     cout << "cleared " << lc << "\n";
     List<int> ll = {1, 5, 4, 10, 100, 45};
     cout << ll << "\n";
+    li = ll;
+    cout << li;
     return 0;
 }
