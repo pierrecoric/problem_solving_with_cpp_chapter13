@@ -24,7 +24,7 @@ class Node {
         Node(T d) : data(d), link(nullptr) {}
         //Copy constructor.
         Node(const Node<T>& original);
-        ~Node();
+        ~Node() {}
 
         //Members functions
         T getData() const {return data;}
@@ -32,9 +32,11 @@ class Node {
         //Overloading the assignment operator
         Node<T>& operator =(const Node<T>& rhs);
         //Overloading ==
-        friend bool operator ==(const Node<T>& A, const Node<T>& B);
+        template <class N>
+        friend bool operator ==(const Node<N>& A, const Node<N>& B);
         //Overloading <<
-        friend ostream& operator <<(ostream& outs, const Node<T>& node);
+        template <class N>
+        friend ostream& operator <<(ostream& outs, const Node<N>& node);
         
         friend class Stack<T>;
         friend class Queue<T>;
@@ -68,6 +70,7 @@ ostream& operator <<(ostream& outs, const Node<T>& node) {
     outs << node.data;
     return outs;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////Node
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////Stack
@@ -86,7 +89,5 @@ class Queue {
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////Queue
 int main() {
-    //Node<int> n(1);
-    //cout << n << "\n";
     return 0;
 }
