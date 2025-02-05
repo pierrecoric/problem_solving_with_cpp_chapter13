@@ -86,10 +86,13 @@ class Stack {
     public:
         //Default constructor.
         Stack() : top(nullptr), size(0) {}
-        //Copy constructor.
-        Stack(const Stack<T>& original);
+        //Copy constructor. (uses =)
+        Stack(const Stack<T>& original) : top(nullptr), size(0) {*this = original;}
         //Destructor.
         ~Stack(){ clear();}
+
+        //Overloading the assignment operator
+        Stack<T>& operator =(const Stack<T>& rhs);
 
         //Members functions
         int getSize() const {return size;}
@@ -102,9 +105,6 @@ class Stack {
         void clear();
         void reverse();
 
-        //Overloading the assignment operator
-        Stack<T>& operator =(const Stack<T>& rhs);
-
         //Overloading the << operator.
         template <class S>
         friend ostream& operator <<(ostream& outs, const Stack<S>& s);
@@ -112,25 +112,27 @@ class Stack {
         friend class Node<T>;
 };
 
-//Copy constructor
+//Overload the assignment operator.
 template <class T>
-Stack<T>::Stack(const Stack<T>& original) {
-    top = nullptr;
-    size = 0;
-    Node<T>* current = original.top;
-    while(current) {
-        Node<T>* newNode = new Node<T>(current -> data);
-        if(top == nullptr) {
-            top = newNode;
+Stack<T>& Stack<T>::operator =(const Stack<T>& rhs) {
+    if(this != &rhs) {
+        clear();
+        Node<T>* current = rhs.top;
+        while(current) {
+            Node<T>* newNode = new Node<T>(current -> data);
+            if(!top) {
+                top = newNode;
+            }
+            else {
+                newNode -> link = top;
+                top = newNode;
+            }
+            current = current -> link;
+            size ++;
         }
-        else {
-            newNode -> link = top;
-            top = newNode;
-        }
-        current = current -> link;
-        size ++;
     }
     reverse();
+    return *this;
 }
 
 //Push function.
@@ -191,30 +193,6 @@ void Stack<T>::reverse() {
     top = previous;
 }
 
-//Overload the assignment operator.
-template <class T>
-Stack<T>& Stack<T>::operator =(const Stack<T>& rhs) {
-    if(this != &rhs) {
-        clear();
-        Node<T>* current = rhs.top;
-        while(current) {
-            Node<T>* newNode = new Node<T>(current -> data);
-            if(!top) {
-                top = newNode;
-            }
-            else {
-                newNode -> link = top;
-                top = newNode;
-            }
-            current = current -> link;
-            size ++;
-        }
-    }
-    reverse();
-    return *this;
-}
-
-
 //Overloading <<.
 template <class T>
 ostream& operator <<(ostream& outs, const Stack<T>& s) {
@@ -245,8 +223,8 @@ class Queue {
     public:
         //Default constructor.
         Queue() : head(nullptr), tail(nullptr), size(0) {}
-        //Copy constructor.
-        Queue(const Queue<T>& original);
+        //Copy constructor. (uses =)
+        Queue(const Queue<T>& original) : head(nullptr), tail(nullptr), size(0) {*this = original;}
         ~Queue() {clear();}
 
         //Overloading the assignment operator
@@ -270,30 +248,6 @@ class Queue {
         friend class Node<T>;
 
 };
-
-//Copy constructor.
-template <class T>
-Queue<T>::Queue(const Queue<T>& original) {
-    head = nullptr;
-    tail = nullptr;
-    size = 0;
-    if(original.head) {
-        Node<T>* current = original.head;
-        while(current) {
-            Node<T>* newNode = new Node<T>(current -> data);
-            if(head == nullptr) {
-                head = newNode;
-                tail = newNode;
-            }
-            else {
-                newNode -> link = head;
-                head = newNode;
-            }
-            current = current -> link;
-            size ++;
-        }
-    }
-}
 
 //Overloading the assignment operator
 template <class T>
@@ -395,9 +349,6 @@ ostream& operator <<(ostream& outs, const Queue<T>& q) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////Queue
 
-
-
-
 int main() {
     Stack<int> s;
     s.push(1);
@@ -408,13 +359,12 @@ int main() {
     cout << s << "\n";
     cout << "poping " << s.pop() << " from the stack\n";
     cout << s << "\n";
-    Stack<int> s2;
-    s.push(100);
-    s.push(34);
-    s2.push(12);
-    s2 = s;
+    cout << "Testing the copy constructor and so also the = operator\n";
+    Stack<int> s2(s);
     cout << s2 << "\n";
     cout << s << "\n";
+
+    
     cout << "Testing Queue\n";
     Queue<int> q;
     q.enqueue(1);
@@ -428,5 +378,6 @@ int main() {
     cout << q2 << "\n";
     q.reverse();
     cout << q << "\n";
+    cout << "\n All good 🔄 \n";
     return 0;
 }
