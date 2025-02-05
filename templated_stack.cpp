@@ -119,16 +119,8 @@ Stack<T>& Stack<T>::operator =(const Stack<T>& rhs) {
         clear();
         Node<T>* current = rhs.top;
         while(current) {
-            Node<T>* newNode = new Node<T>(current -> data);
-            if(!top) {
-                top = newNode;
-            }
-            else {
-                newNode -> link = top;
-                top = newNode;
-            }
+            push(current -> data);
             current = current -> link;
-            size ++;
         }
     }
     reverse();
@@ -211,7 +203,6 @@ ostream& operator <<(ostream& outs, const Stack<T>& s) {
     return outs;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////Stack
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////Queue
 template <class T>
@@ -350,34 +341,49 @@ ostream& operator <<(ostream& outs, const Queue<T>& q) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////Queue
 
 int main() {
-    Stack<int> s;
-    s.push(1);
-    s.push(2);
-    s.push(3);
-    s.push(4);
-    s.push(5);
-    cout << s << "\n";
-    cout << "poping " << s.pop() << " from the stack\n";
-    cout << s << "\n";
-    cout << "Testing the copy constructor and so also the = operator\n";
-    Stack<int> s2(s);
+    cout << "Testing:\n";
+    cout << "Testing Node:\n";
+    cout << "Creating:\n";
+    Node<int> n1(100);
+    cout << "Outputing:\n";
+    cout << n1 << "\n";
+    cout << "Copy constructor:\n";
+    Node<int> n2(n1);
+    cout << n2 << "\n";
+    cout << "\n";
+    cout << "Testing Stack:\n";
+    cout << "Creating:\n";
+    Stack<int> s1;
+    for(int i = 0; i < 25; i++) {
+        s1.push(i);
+    }
+    cout << "Outputing:\n";
+    cout << s1 << "\n";
+    cout << "Copy constructor:\n";
+    Stack<int> s2(s1);
     cout << s2 << "\n";
-    cout << s << "\n";
-
-    
-    cout << "Testing Queue\n";
-    Queue<int> q;
-    q.enqueue(1);
-    q.enqueue(2);
-    q.enqueue(3);
-    q.enqueue(4);
-    cout << q << "\n";
-    q.dequeue();
-    cout << q << "\n";
-    Queue<int> q2(q);
+    cout << "clearing:\n";
+    s1.clear();
+    cout << s1 << "\n";
+    cout << "poping on an empty stack:\n";
+    cout << s1.pop();
+    cout << "\n";
+    cout << "Testing Queue:\n";
+    cout << "Creating:\n";
+    Queue<int> q1;
+    for(int i = 0; i < 25; i++) {
+        q1.enqueue(i);
+    }
+    cout << "Outputing:\n";
+    cout << q1 << "\n";
+    cout << "Copy constructor:\n";
+    Queue<int> q2(q1);
     cout << q2 << "\n";
-    q.reverse();
-    cout << q << "\n";
+    cout << "clearing:\n";
+    q1.clear();
+    cout << q1 << "\n";
+    cout << "dequeuing an empty queue:\n";
+    cout << q1.dequeue();
     cout << "\n All good 🔄 \n";
     return 0;
 }
