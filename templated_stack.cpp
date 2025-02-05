@@ -59,7 +59,12 @@ template <class T>
 Node<T>& Node<T>::operator =(const Node<T>& rhs) {
     if(this != &rhs) {
         data = rhs.data;
-        link = rhs.link;
+        if(rhs.link) {
+            link = new Node<T>(*rhs.link);
+        }
+        else {
+            link = nullptr;
+        }
     }
     return *this;
 }
@@ -284,6 +289,7 @@ T Queue<T>::dequeue() {
     return result;
 }
 
+
 //clear function.
 template <class T>
 void Queue<T>::clear() {
@@ -296,6 +302,22 @@ void Queue<T>::clear() {
     tail = nullptr;
     size = 0;
 }
+
+/*
+//Recursive clear function for fun
+template <class T>
+void Queue<T>::clear() {
+    if (head == nullptr) {
+        size = 0;
+        tail = nullptr;
+        return;
+    }
+    Node<T>* temp = head;
+    head = head -> link;
+    delete temp;
+    clear();
+}
+*/
 
 //Reverse function
 template <class T>
