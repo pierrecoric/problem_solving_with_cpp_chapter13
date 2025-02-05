@@ -50,7 +50,7 @@ ostream& operator <<(ostream& outs, const BigNumber& bn) {
     }
     for(int i = 0; i < bn.size; i++) {
         if(dotCount == DOTS) {
-            outs << ".";
+            outs << ",";
             dotCount = 0;
         }
         outs << bn.data[i];
@@ -119,8 +119,8 @@ BigNumber addNumbers(const BigNumber& numberA, const BigNumber& numberB) {
 
 int main() {
     vector<int> test;
-    BigNumber bn1("123467812312831902397162497128937918249081273123");
-    BigNumber bn2("12381023801270912830128300019280");
+    BigNumber bn1("123467812312831902397112312903102912380928091283091262497128937918249081273123");
+    BigNumber bn2("123810238012709128301283000123091283091283019283091283098102939999999999999999999999999919280");
     BigNumber bn3 = addNumbers(bn1, bn2);
     cout << bn3 << "\n";
     return 0;
@@ -133,5 +133,3 @@ int charToInt(char c) {
 char intToChar(int i) {
     return i + '0';
 }
-
-//123467812312831902397162497128937918249081273123 + 12381023801270912830128300019280 = 123.467.812.312.831.914.778.186.298.399.850.748.377.381.292.403
