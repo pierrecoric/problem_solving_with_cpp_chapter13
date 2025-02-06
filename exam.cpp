@@ -1,3 +1,8 @@
+#include <queue>
+#include <iostream>
+using std::queue;
+using std::cout;
+
 struct TreeNode {
     int val;
     TreeNode* left;
@@ -14,28 +19,56 @@ bool isSameTree(TreeNode* p, TreeNode* q) {
     if(!p && !q) {
         return true;
     }
-    //If the values are the same
-    if(q -> val == p -> val) {
-        //recursive call on the left side and on the right side.
-        isSameTree(q -> left, p -> left);
-        isSameTree(q -> right, p -> right);
-    } else return false;
+    if(!p || !q) {
+        return false;
+    }
+    if(p -> val != q -> val) {
+        return false;
+    }
+    return (isSameTree(p->left, q->left) && (p -> right, q -> right));
 }
 
 // Given a binary tree, check whether it is a mirror of itself
 // (ie, symmetric around its center).
-bool isSymmetric(TreeNode* root) {
-    if(root -> left == nullptr && root -> right == nullptr) {
+
+bool isMirror(TreeNode* a, TreeNode* b) {
+    if(!a && !b) {
         return true;
     }
-    if(root -> left) {
-
+    if(!a || !b) {
+        return false;
     }
+    return (a -> val == b -> val && isMirror(a -> right, b -> left) && isMirror(a -> left, b -> right));
+}
+
+bool isSymmetric(TreeNode* root) {
+    if(!root) {
+        return true;
+    }
+    return isMirror(root -> left, root -> right);
 }
 
 // Given a binary tree, implement level order traversal
 void levelOrder(TreeNode* root) {
-    if(root -> left == nullptr !! root -> right == nullptr) {
-        std::cout << root -> val << " ";
+    if(!root) {
+        return;
+    }
+    queue<TreeNode*> q;
+    q.push(root);
+
+    while(!q.empty()) {
+        TreeNode* node = q.front();
+        q.pop();
+
+        cout << node -> val << " ";
+
+        if(root -> left) {
+            q.push(node -> left);
+        }
+
+        if(root -> right) {
+            q.push(node -> right);
+        }
+        
     }
 }
